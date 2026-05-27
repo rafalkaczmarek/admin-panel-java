@@ -1,5 +1,6 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.security;
 
+import com.example.springboot.auth.exception.AuthException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,5 +1,13 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.service;
 
+import com.example.springboot.auth.domain.AppUser;
+import com.example.springboot.auth.domain.RefreshToken;
+import com.example.springboot.auth.exception.AuthException;
+import com.example.springboot.auth.repository.RefreshTokenRepository;
+import com.example.springboot.auth.repository.UserRepository;
+import com.example.springboot.auth.security.AuthProperties;
+import com.example.springboot.auth.security.JwtService;
+import com.example.springboot.auth.security.TokenHasher;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -68,7 +76,6 @@ public class AuthService {
 			throw new AuthException(HttpStatus.UNAUTHORIZED, "INVALID_SESSION", "Session expired.");
 		}
 
-		// rotate refresh token
 		refreshTokenRepository.deleteById(stored.getId());
 		log.info("Refresh succeeded for userId={} email={}", stored.getUser().getId(), stored.getUser().getEmail());
 		return issueSession(stored.getUser(), false);
@@ -85,7 +92,6 @@ public class AuthService {
 			refreshTokenRepository.deleteByTokenHash(tokenHash);
 			log.info("Logout succeeded (refresh token deleted)");
 		} catch (RuntimeException ignored) {
-			// best-effort cleanup (idempotent)
 			log.debug("Logout cleanup failed (ignored)", ignored);
 		}
 	}

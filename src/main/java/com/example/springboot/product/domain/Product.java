@@ -1,4 +1,4 @@
-package com.example.springboot.product;
+package com.example.springboot.product.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

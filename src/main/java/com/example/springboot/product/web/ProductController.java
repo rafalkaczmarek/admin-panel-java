@@ -1,5 +1,7 @@
-package com.example.springboot.product;
+package com.example.springboot.product.web;
 
+import com.example.springboot.product.dto.ProductDto;
+import com.example.springboot.product.service.ProductService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.security;
 
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;

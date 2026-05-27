@@ -1,9 +1,12 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.springboot.auth.domain.AppUser;
+import com.example.springboot.auth.repository.RefreshTokenRepository;
+import com.example.springboot.auth.repository.UserRepository;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,4 +94,3 @@ class AuthControllerTest {
 				.andExpect(status().isNoContent());
 	}
 }
-

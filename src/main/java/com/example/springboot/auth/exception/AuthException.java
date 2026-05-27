@@ -1,4 +1,4 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.exception;
 
 import org.springframework.http.HttpStatus;
 

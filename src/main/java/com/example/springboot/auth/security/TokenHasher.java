@@ -1,14 +1,14 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-final class TokenHasher {
+public final class TokenHasher {
 	private TokenHasher() {
 	}
 
-	static String sha256Hex(String raw) {
+	public static String sha256Hex(String raw) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			byte[] digest = md.digest(raw.getBytes(StandardCharsets.UTF_8));

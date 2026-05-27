@@ -1,4 +1,4 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

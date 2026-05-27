@@ -1,9 +1,14 @@
-package com.example.springboot.product;
+package com.example.springboot.product.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.springboot.auth.domain.AppUser;
+import com.example.springboot.auth.repository.UserRepository;
+import com.example.springboot.auth.security.JwtService;
+import com.example.springboot.product.domain.Product;
+import com.example.springboot.product.repository.ProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -15,10 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import com.example.springboot.auth.AppUser;
-import com.example.springboot.auth.JwtService;
-import com.example.springboot.auth.UserRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc

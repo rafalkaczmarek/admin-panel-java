@@ -1,5 +1,6 @@
-package com.example.springboot.product;
+package com.example.springboot.product.dto;
 
+import com.example.springboot.product.domain.Product;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -13,7 +14,7 @@ public record ProductDto(
 		String[] availableColors,
 		Instant createdAt,
 		Instant updatedAt) {
-	static ProductDto from(Product product) {
+	public static ProductDto from(Product product) {
 		return new ProductDto(
 				product.getId(),
 				product.getImage(),

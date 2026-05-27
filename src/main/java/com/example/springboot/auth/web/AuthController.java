@@ -1,5 +1,6 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.web;
 
+import com.example.springboot.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

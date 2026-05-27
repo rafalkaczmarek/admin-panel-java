@@ -1,5 +1,6 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.security;
 
+import com.example.springboot.auth.domain.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -32,7 +33,6 @@ public class JwtService {
 			keyBytes = raw.getBytes(StandardCharsets.UTF_8);
 		}
 
-		// HS256 requires >= 256-bit key (>= 32 bytes)
 		if (keyBytes.length < 32) {
 			throw new IllegalStateException(
 					"JWT access secret is too short for HS256 (need >= 32 bytes). " +

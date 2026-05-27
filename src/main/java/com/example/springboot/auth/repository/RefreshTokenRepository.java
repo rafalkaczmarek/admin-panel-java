@@ -1,5 +1,6 @@
-package com.example.springboot.auth;
+package com.example.springboot.auth.repository;
 
+import com.example.springboot.auth.domain.RefreshToken;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
