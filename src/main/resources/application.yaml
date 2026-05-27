@@ -19,7 +19,8 @@ spring:
 app:
   auth:
     jwt:
-      access-secret: ${JWT_ACCESS_SECRET:dev-secret-change-me}
+      # Use >= 32 bytes for HS256, or pass base64:<...> to decode.
+      access-secret: ${JWT_ACCESS_SECRET:base64:9MqdgTYJjG6gH8vYQp0o4Mdu0Aq5dE4S6cC1dQx2tE0=}
       access-ttl: ${JWT_ACCESS_TTL:15m}
     refresh:
       ttl-days: ${REFRESH_TTL_DAYS:7}
