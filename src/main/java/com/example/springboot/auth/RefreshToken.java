@@ -8,12 +8,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "refresh_tokens")
 public class RefreshToken {
 	@Id
-	@Column(nullable = false)
+	@Column(nullable = false, name = "refresh_token_id")
 	private String id;
 
 	@Column(nullable = false, unique = true, name = "token_hash")
@@ -25,6 +26,10 @@ public class RefreshToken {
 
 	@Column(nullable = false, name = "expires_at")
 	private Instant expiresAt;
+
+	@CreationTimestamp
+	@Column(nullable = false, name = "created_at")
+	private Instant createdAt;
 
 	protected RefreshToken() {
 	}
@@ -50,5 +55,9 @@ public class RefreshToken {
 
 	public Instant getExpiresAt() {
 		return expiresAt;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
 	}
 }
