@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.time.Duration;
 import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 	private static final String REFRESH_COOKIE = "refreshToken";
 
 	private final AuthService authService;
@@ -27,6 +30,9 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public AuthService.AuthResponse login(@Valid @RequestBody LoginBody body, HttpServletResponse response) {
+		log.debug("POST /api/auth/login email={} rememberMe={}",
+				String.valueOf(body.email()).trim().toLowerCase(),
+				Boolean.TRUE.equals(body.rememberMe()));
 		AuthService.IssuedSession session = authService.login(body.email(), body.password(),
 				Boolean.TRUE.equals(body.rememberMe()));
 		response.addHeader("Set-Cookie",
@@ -38,6 +44,7 @@ public class AuthController {
 	public AuthService.AuthResponse refresh(
 			@CookieValue(name = REFRESH_COOKIE, required = false) String rawRefreshToken,
 			HttpServletResponse response) {
+		log.debug("POST /api/auth/refresh hasCookie={}", rawRefreshToken != null && !rawRefreshToken.isBlank());
 		AuthService.IssuedSession session = authService.refresh(rawRefreshToken);
 		response.addHeader("Set-Cookie",
 				refreshCookie(session.response().expiresAt(), session.refreshToken()).toString());
@@ -49,6 +56,7 @@ public class AuthController {
 	public void logout(
 			@CookieValue(name = REFRESH_COOKIE, required = false) String rawRefreshToken,
 			HttpServletResponse response) {
+		log.debug("POST /api/auth/logout hasCookie={}", rawRefreshToken != null && !rawRefreshToken.isBlank());
 		authService.logout(rawRefreshToken);
 		response.addHeader("Set-Cookie", clearRefreshCookie().toString());
 	}

@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
+	private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 	private static final int REFRESH_BYTES = 48;
 	private final SecureRandom secureRandom = new SecureRandom();
 
@@ -38,18 +41,19 @@ public class AuthService {
 	public IssuedSession login(String email, String password, boolean rememberMe) {
 		String normalizedEmail = String.valueOf(email).trim().toLowerCase();
 		AppUser user = userRepository.findByEmail(normalizedEmail).orElse(null);
-
-		boolean ok = user != null && passwordEncoder.matches(password, user.getPasswordHash());
-		if (!ok) {
+		if (user == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
+			log.warn("Login failed for email={}", normalizedEmail);
 			throw new AuthException(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", "Incorrect email or password.");
 		}
 
+		log.info("Login succeeded for userId={} email={} rememberMe={}", user.getId(), user.getEmail(), rememberMe);
 		return issueSession(user, rememberMe);
 	}
 
 	@Transactional
 	public IssuedSession refresh(String rawRefreshToken) {
 		if (rawRefreshToken == null || rawRefreshToken.isBlank()) {
+			log.warn("Refresh failed: missing refresh token");
 			throw new AuthException(HttpStatus.UNAUTHORIZED, "INVALID_SESSION", "Missing refresh token.");
 		}
 
@@ -60,24 +64,29 @@ public class AuthService {
 			if (stored != null) {
 				refreshTokenRepository.deleteById(stored.getId());
 			}
+			log.warn("Refresh failed: session expired or not found");
 			throw new AuthException(HttpStatus.UNAUTHORIZED, "INVALID_SESSION", "Session expired.");
 		}
 
 		// rotate refresh token
 		refreshTokenRepository.deleteById(stored.getId());
+		log.info("Refresh succeeded for userId={} email={}", stored.getUser().getId(), stored.getUser().getEmail());
 		return issueSession(stored.getUser(), false);
 	}
 
 	@Transactional
 	public void logout(String rawRefreshToken) {
 		if (rawRefreshToken == null || rawRefreshToken.isBlank()) {
+			log.debug("Logout: no refresh token provided (idempotent)");
 			return;
 		}
 		String tokenHash = TokenHasher.sha256Hex(rawRefreshToken);
 		try {
 			refreshTokenRepository.deleteByTokenHash(tokenHash);
+			log.info("Logout succeeded (refresh token deleted)");
 		} catch (RuntimeException ignored) {
 			// best-effort cleanup (idempotent)
+			log.debug("Logout cleanup failed (ignored)", ignored);
 		}
 	}
 
