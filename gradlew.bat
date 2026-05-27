@@ -32,6 +32,9 @@ if "%DIRNAME%"=="" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%
 
+@rem Use project-local Gradle user home to avoid non-ASCII user profile paths
+if "%GRADLE_USER_HOME%"=="" set GRADLE_USER_HOME=%APP_HOME%\.gradle-user-home
+
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 
