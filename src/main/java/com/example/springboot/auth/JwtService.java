@@ -1,0 +1,50 @@
+package com.example.springboot.auth;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
+import javax.crypto.SecretKey;
+import org.springframework.stereotype.Component;
+
+@Component
+public class JwtService {
+	private final AuthProperties props;
+
+	public JwtService(AuthProperties props) {
+		this.props = props;
+	}
+
+	private SecretKey key() {
+		return Keys.hmacShaKeyFor(props.jwt().accessSecret().getBytes(StandardCharsets.UTF_8));
+	}
+
+	public SignedAccessToken signAccessToken(AppUser user) {
+		Instant now = Instant.now();
+		Instant exp = now.plus(props.jwt().accessTtl());
+
+		String token = Jwts.builder()
+				.subject(user.getId())
+				.claim("email", user.getEmail())
+				.claim("roles", user.getRoles())
+				.issuedAt(Date.from(now))
+				.expiration(Date.from(exp))
+				.signWith(key(), Jwts.SIG.HS256)
+				.compact();
+
+		return new SignedAccessToken(token, exp);
+	}
+
+	public Claims verify(String token) {
+		return Jwts.parser()
+				.verifyWith(key())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
+	}
+
+	public record SignedAccessToken(String token, Instant expiresAt) {
+	}
+}

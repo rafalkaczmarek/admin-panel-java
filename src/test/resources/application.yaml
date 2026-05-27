@@ -1,9 +1,20 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:admin_panel_test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
     username: sa
     password:
-    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  auth:
+    jwt:
+      access-secret: test-secret-test-secret-test-secret-test-secret
+      access-ttl: 15m
+    refresh:
+      ttl-days: 7
+      ttl-remember-days: 30

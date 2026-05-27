@@ -15,3 +15,12 @@ spring:
     properties:
       hibernate:
         default_schema: public
+
+app:
+  auth:
+    jwt:
+      access-secret: ${JWT_ACCESS_SECRET:dev-secret-change-me}
+      access-ttl: ${JWT_ACCESS_TTL:15m}
+    refresh:
+      ttl-days: ${REFRESH_TTL_DAYS:7}
+      ttl-remember-days: ${REFRESH_TTL_REMEMBER_DAYS:30}
