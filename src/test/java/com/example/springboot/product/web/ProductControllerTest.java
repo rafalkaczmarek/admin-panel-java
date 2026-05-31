@@ -41,6 +41,12 @@ class ProductControllerTest {
 	private JwtService jwtService;
 
 	@Test
+	void shouldReturn401WithoutAccessToken() throws Exception {
+		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+	}
+
+	@Test
 	void shouldReturnListOfProducts() throws Exception {
 		String email = "admin+" + UUID.randomUUID() + "@dashstack.com";
 		AppUser user = userRepository.save(new AppUser(
@@ -54,8 +60,8 @@ class ProductControllerTest {
 		productRepository.save(new Product("Mouse", new BigDecimal("79.00")));
 
 		MvcResult result = mockMvc.perform(get("/api/products")
-						.header("Authorization", "Bearer " + token)
-						.accept(MediaType.APPLICATION_JSON))
+				.header("Authorization", "Bearer " + token)
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 
