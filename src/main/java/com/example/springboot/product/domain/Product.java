@@ -104,4 +104,13 @@ public class Product {
 	public Instant getUpdatedAt() {
 		return updatedAt;
 	}
+
+	public void update(String image, String name, String category, BigDecimal price, int piece, String[] availableColors) {
+		this.image = image;
+		this.name = name;
+		this.category = category;
+		this.price = price;
+		this.piece = piece;
+		this.availableColors = availableColors == null ? new String[0] : availableColors;
+	}
 }

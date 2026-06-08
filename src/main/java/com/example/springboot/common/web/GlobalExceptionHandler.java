@@ -1,6 +1,7 @@
 package com.example.springboot.common.web;
 
 import com.example.springboot.auth.exception.AuthException;
+import com.example.springboot.product.exception.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+	@ExceptionHandler(ProductException.class)
+	public ResponseEntity<ApiError> product(ProductException ex) {
+		log.info("Product error code={} status={}", ex.code(), ex.status().value());
+		return ResponseEntity.status(ex.status()).body(new ApiError(ex.code(), ex.getMessage()));
+	}
 
 	@ExceptionHandler(AuthException.class)
 	public ResponseEntity<ApiError> auth(AuthException ex) {

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import com.example.springboot.auth.exception.AuthException;
+import com.example.springboot.product.exception.ProductException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,19 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 class GlobalExceptionHandlerTest {
 
 	private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+	@Test
+	void productShouldMapNotFound() {
+		ProductException ex = new ProductException(
+				HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "Product not found: abc");
+
+		ResponseEntity<ApiError> response = handler.product(ex);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().code()).isEqualTo("PRODUCT_NOT_FOUND");
+		assertThat(response.getBody().message()).isEqualTo("Product not found: abc");
+	}
 
 	@Test
 	void authShouldMapUnauthorized() {
